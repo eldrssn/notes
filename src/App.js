@@ -1,24 +1,32 @@
-import logo from './logo.svg';
-import './App.css';
+import { Col, Divider } from 'antd';
+import Header from './components/Header';
+import 'antd/dist/antd.css';
+import { useMemo, useState } from 'react';
+import AddCard from './components/AddCard';
+import { useSelector } from 'react-redux';
+import SearchCard from './components/SearchCard';
+import Notes from './components/Notes';
+
 
 function App() {
+
+  const notes = useSelector(state => state)
+  const [searchValue, setSearchValue] = useState('');
+
+  const filteredNotes = useMemo(() => notes
+    .slice()
+    .filter(card => card.text.toLowerCase().includes(searchValue.toLowerCase())), 
+    [searchValue, notes]
+  )
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Col span={12} offset={6}>
+      <Header />
+      <SearchCard setSearchValue={setSearchValue} />
+      <Divider />
+      <Notes filteredNotes={filteredNotes} />
+      <AddCard />
+    </Col>
   );
 }
 
